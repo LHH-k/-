@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8">
+		<title>推文</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<style>
+			*{ margin: 0; padding: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); -webkit-text-size-adjust: none;}
+			ul,li{list-style: none;}
+			html{ font-size: 10px;}
+			body{ background-color: #fff; font-size: 1.2em;min-height: 100vh;}
+			.header{width: 100%;}
+			.header img{width: 100%;display: block;}
+			.content{ max-width: 640px; margin: 0 auto; background-color: #fff; position: relative;padding-top: 3.6rem;}
+			.content .item{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -ms-flex-align: center; -webkit-box-align: center; box-align: center; -webkit-align-items: center; align-items: center; padding: 3.125%; border-bottom: 1px solid #ddd; color: #333; text-decoration: none; flex-grow:1;}
+			.content .item img{ display: block; width: 40px; height: 40px; border: 1px solid #ddd;float: left;}
+			.content .item > div{max-height: 40px; line-height: 20px; margin: 0 10px; font-size: 1.2rem;width: 100%;-webkit-box-flex: 1; -webkit-flex: 1; -ms-flex: 1; flex: 1;}
+			.content .item h3{ height: 20px;text-overflow: ellipsis;overflow: hidden;width: 100%;}
+			.content .item p{ height: 20px;text-overflow: ellipsis;overflow: hidden;width: 100%;}
+			.opacity{ -webkit-animation: opacity 0.3s linear; animation: opacity 0.3s linear;}
+			@-webkit-keyframes opacity{ 0%{ opacity: 0;}
+				100%{ opacity: 1;}
+				}
+			@keyframes opacity{ 0%{ opacity: 0;}
+				100%{ opacity: 1;}
+				}
+				
+			.tabs{position: absolute;left: 0;top: 0;height:3.6rem;line-height:3.6rem;width: 100%;background-color: #eee;padding: 0 1rem;box-sizing: border-box;}
+			.tabs.fix{position: fixed;}
+			.tabs li{float: left;width: 25%;text-align: center;font-size: 1.4rem;}
+			.tabs li.active{color: #00C795;}
+			.lists{display: none;}
+			.lists.active{display: block;}
+		</style>
+		<link rel="stylesheet" href="../dist/dropload.css">
+	</head>
+
+	<body>
+		<div class="header">
+			<img src="../images/banner1-1.jpg" alt="" />
+		</div>
+		<div class="content">
+			<ul class="tabs">
+				<li class="active" attr-id='1'>室内专场</li>
+				<li attr-id='2'>室外专场</li>
+				<li attr-id='3'>专属福利</li>
+				<li attr-id='4'>超值套餐</li>
+			</ul>
+			<div class="lists active"></div>
+			<div class="lists"></div>
+			<div class="lists"></div>
+			<div class="lists"></div>
+		</div>
+		<script src="js/zepto.min.js"></script>
+		<script src="../dist/dropload.js"></script>
+		<script>
+			$(function() {
+				var toTop = $(".tabs").offset().top;
+				$(window).on('scroll',function(){
+					var sTop = $(this).scrollTop();
+					if(sTop >= toTop){
+						$(".tabs").addClass("fix");
+					}else{
+						$(".tabs").removeClass("fix");
+					}
+				})
+				
+				// 页数
+				var page = 0;
+				//最多四个分页
+				var page1,page2,page3,page4;
+				// 默认展示第几个选项
+				var sort = 1;
+				// 每页展示5个
+				var size = 5;
+				// 数据加载的对象
+				var dropload;
+				
+				drop();
+				function drop(){
+					$('.dropload-down').remove();
+					// dropload
+					dropload = $('.content').dropload({
+						scrollArea: window,
+						loadDownFn: function(me) {
+							page++;
+							// 拼接HTML
+							var result = '';
+							$.ajax({
+								type: 'GET',
+								url: 'http://ons.me/tools/dropload/json.php?page=' + page + '&size=' + size + '&sort=' + sort,
+								dataType: 'json',
+								success: function(data) {
+									var arrLen = data.length;
+									if(arrLen > 0) {
+										for(var i = 0; i < arrLen; i++) {
+											result += '<a class="item opacity" href="' + data[i].link + '">' +
+												'<img src="' + data[i].pic + '" alt="">' +
+												'<div><h3>' + data[i].title + '</h3>' +
+												'<p>' + data[i].date + '</p></div>' +
+												'</a>';
+										}
+										// 如果没有数据
+									} else {
+										// 锁定
+										me.lock();
+										// 无数据
+										me.noData();
+										if($(".lists.active").html()){											
+											$('.dropload-down').remove();
+										}
+									}
+									// 插入数据到页面，放到最后面
+									$('.lists').eq(sort-1).append(result);
+									if(sort==1){
+										page1 = page;
+									}else if(sort==2){
+										page2 = page;
+									}else if(sort==3){
+										page3 = page;
+									}else if(sort==4){
+										page4 = page;
+									}
+									// 每次数据插入，必须重置
+									me.resetload();
+								},
+								error: function(xhr, type) {
+									alert('Ajax error!');
+									// 即使加载出错，也得重置
+									me.resetload();
+								}
+							});
+						}
+					});
+				}
+				//tab切换
+				$(".tabs li").on('click',function(){
+					if($(window).scrollTop() >= toTop){
+						window.scrollTo(0 , toTop);
+					}
+					$(this).addClass("active").siblings().removeClass("active");
+					$(".lists").eq($(this).index()).addClass("active").siblings().removeClass("active");
+					sort = $(this).attr('attr-id');
+					if(!$(".lists").eq(sort-1).html()){
+						page = 0;
+					}else if(sort==1){
+						page = page1;
+					}else if(sort==2){
+						page = page2;
+					}else if(sort==3){
+						page = page3;
+					}else if(sort==4){
+						page = page4;
+					}
+					drop();
+					
+				})
+			});
+		</script>
+	</body>
+
+</html>

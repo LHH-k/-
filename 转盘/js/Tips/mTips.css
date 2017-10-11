@@ -1,0 +1,5 @@
+#aTips_wrap{position: fixed;width: 100vw;height: 100vh;left: 0;top: 0;z-index: 1000;background: rgba(0,0,0,.4);}
+#aTips_box{width: 280px;background: rgba(255,101,1,.9);position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);-moz-transform: translate(-50%,-50%);text-align: center;padding: 10px;}
+#aTips_content{padding: 20px;font-size: 20px;color: #fff;}
+#aTips_foot{}
+#aTips_foot a{display: inline-block;width: 50%;height: 40px;line-height: 40px;text-decoration: none;color: #ff6501;background: #fcf9dc;font-size: 18px;margin-bottom:5px;}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>随机取区间内不重复数字</title>
+	</head>
+	<body>
+
+	<script type="text/javascript">
+		function fn(n){
+			var min = 2 , max = 32;
+			var err = '需要填写正整数哦！';
+			var err1= '不重复的数字最多只有'+(max-min+1)+'个哦！';
+			if(!typeof(n) == Number){return err};	//是否数字
+			if(!n>0){return err};					//是否正数
+			if(!parseInt(n)==n){return err};		//是否整数
+			if(n>(max-min+1)){return err1};			//是否有效数字
+			//创建空数组
+			var arr = [];
+			//循环
+			for(var i=0; i<n; i++){
+				//产生一个随机数
+				var rmd = getRand(min,max);
+				//重复的话就重新删除，从新生成随机数
+				if(checkInArr(arr,rmd)){
+		            i--;
+		        }else{
+		            arr.push(rmd);
+		        }
+				
+			}
+			//排序
+			toSort(arr);
+			return arr;		
+		}
+		
+		//随机数
+		function getRand(min,max){
+			return Math.floor(Math.random()*(max-min+1))+min;
+		}
+		//判断是否重复
+		function checkInArr(arr,rmd){
+			for(var i=0 ; i<arr.length ; i++){
+				if(arr[i] == rmd){
+					return true;
+				}
+			}
+			return false;
+		}
+		//正向排序
+		function toSort(arr){
+			for(var i=0 ; i<arr.length ; i++){
+				for(var j=i+1 ; j<arr.length ; j++){					
+					if(arr[i]>arr[j]){
+						arr[i] = arr[j] + arr[i];
+						arr[j] = arr[i] - arr[j];
+						arr[i] = arr[i]	- arr[j];
+					}
+				}
+			}
+			return arr;
+		}
+		
+		console.log(fn(10));
+		
+	</script>
+	</body>
+</html>
