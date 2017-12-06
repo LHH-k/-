@@ -1,0 +1,43 @@
+{
+  "name": "amazeui-datatables",
+  "version": "0.0.6",
+  "description": "jQuery DataTables 插件 Amaze UI 集成",
+  "main": "lib/amazeui.datatables.js",
+  "style": "dist/amazeui.datatables.css",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amazeui/datatables.git"
+  },
+  "keywords": [
+    "amazeui-plugin",
+    "amaze-ui",
+    "AMUI",
+    "datatables",
+    "table",
+    "jquery-plugin"
+  ],
+  "author": "harvesthq",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amazeui/datatables/issues"
+  },
+  "homepage": "http://amazeui.github.io/datatables/",
+  "licenses": "MIT",
+  "devDependencies": {
+    "amazeui-doc-util": "latest",
+    "amazeui-gulp-tasks": "0.0.7",
+    "datatables": "^1.10.12",
+    "gulp": "^3.9.1",
+    "run-sequence": "^1.2.2"
+  },
+  "dependencies": {
+    "amazeui": "^2.7.0",
+    "jquery": "^2.2.3"
+  },
+  "browserify-shim": {
+    "jquery": "global:jQuery"
+  }
+}

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Luck Draw</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="dist/jquery.slotmachine.css" type="text/css" media="screen" />
+		<style type="text/css">
+			.boxs{width: 700px;margin: 70px auto 0;}
+			.boxs .title{width: 100%;}
+			.boxs .title img{width: 100%;}
+			.boxs .jq{position: relative;margin: 40px 0;}
+			.boxs .jq .img{width: 70%;display: block;margin:0 auto;}
+			.boxs .jq .go-box{position: absolute;left: 38.5%;bottom: 23.2%;width: 22.5%;cursor: pointer;}
+			.boxs .jq .go-box img{display: none; width: 100%;}
+			.boxs .jq .go-box img.active{display: block;}
+			.boxs .text{position: absolute;width: 50%;height: 17%;left: 25%;top: 19%;overflow: hidden;font-size: 70px;}
+			.boxs .text .randomizeMachine{float: left;width: 14%; height: 100%;text-align: center;vertical-align:middle;}
+			.boxs .text .randomizeMachine div{height: 100%;}
+			@media only screen and (max-width:700px) {
+				.boxs{width: 100%;}
+				.boxs .text{font-size: 36px;}
+			}
+			@media only screen and (max-width:320px) {
+				.boxs .text{font-size: 30px;}
+			}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			<div class="boxs">
+				<div class="title">
+					<img src="images/title.png" alt="" />
+				</div>
+				<div class="jq">
+					<img src="images/luck.png" class="img" alt="" />
+					<div class="go-box" id="go-box">
+						<img src="images/GO.png" class="go active" alt="" />
+						<img src="images/GO-down.png" class="go_down" alt="" />
+					</div>
+					<div class="text">
+						<div id="machine1" class="randomizeMachine">
+							<div>0</div>
+							<div>1</div>
+							<div>2</div>
+							<div>3</div>
+							<div>4</div>
+							<div>5</div>
+							<div>6</div>
+							<div>7</div>
+							<div>8</div>
+							<div>9</div>
+						</div>
+						<div id="machine2" class="randomizeMachine">
+							<div>0</div>
+							<div>1</div>
+							<div>2</div>
+							<div>3</div>
+							<div>4</div>
+							<div>5</div>
+							<div>6</div>
+							<div>7</div>
+							<div>8</div>
+							<div>9</div>
+						</div>
+						<div id="machine3" class="randomizeMachine">
+							<div>0</div>
+							<div>1</div>
+							<div>2</div>
+							<div>3</div>
+							<div>4</div>
+							<div>5</div>
+							<div>6</div>
+							<div>7</div>
+							<div>8</div>
+							<div>9</div>
+						</div>
+						<div id="machine4" class="randomizeMachine">
+							<div>0</div>
+							<div>1</div>
+							<div>2</div>
+							<div>3</div>
+							<div>4</div>
+							<div>5</div>
+							<div>6</div>
+							<div>7</div>
+							<div>8</div>
+							<div>9</div>
+						</div>
+						<div id="machine5" class="randomizeMachine">
+							<div>0</div>
+							<div>1</div>
+							<div>2</div>
+							<div>3</div>
+							<div>4</div>
+							<div>5</div>
+							<div>6</div>
+							<div>7</div>
+							<div>8</div>
+							<div>9</div>
+						</div>
+						<div id="machine6" class="randomizeMachine">
+							<div>0</div>
+							<div>1</div>
+							<div>2</div>
+							<div>3</div>
+							<div>4</div>
+							<div>5</div>
+							<div>6</div>
+							<div>7</div>
+							<div>8</div>
+							<div>9</div>
+						</div>
+						<div id="machine7" class="randomizeMachine">
+							<div>0</div>
+							<div>1</div>
+							<div>2</div>
+							<div>3</div>
+							<div>4</div>
+							<div>5</div>
+							<div>6</div>
+							<div>7</div>
+							<div>8</div>
+							<div>9</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="../../plugin/agile-lite/assets/third/jquery/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="dist/jquery.slotmachine.js"></script>
+		<script src="../js/app-tj.js"></script>
+		<script type="text/javascript">
+			$(window).load(function(){
+				var flag = 1;
+				var isRun = 0;
+				var sData,data;
+				//获取数据
+				$.ajax({
+					type:"get",
+					dataType:"jsonp",
+					jsonp: "callback",
+					jsonpCallback: "data",
+					url:"http://admin.jiakuaibao.com/Gm/raffleActivity",
+					success:function(data){
+						if(data.result){
+							sData = data.data;
+						}else{
+							sData = "0401846";
+						}
+						data = sData.split("");
+						if(data){							
+							if($(window).width() <= 1024){
+								$("html").on('touchstart','.go-box',function(){
+									run(data);
+								})
+							}else{
+								$("html").on('click','.go-box',function(){
+									run(data);
+								})					
+							}
+						}
+					}
+				})
+				//点击事件
+				$(".go-box").on("mousedown",function(){
+					$(this).find(".go_down").addClass("active").siblings(".go").removeClass("active");
+				})
+				$(".go-box").on("mouseup",function(){
+					$(this).find(".go").addClass("active").siblings(".go_down").removeClass("active");
+				})	
+				$(".go-box .go_down").on("mouseout",function(){
+					$(".go-box").find(".go").addClass("active").siblings(".go_down").removeClass("active");
+				})
+				function run(data){
+					var machine1 = $("#machine1").slotMachine({
+						active : 0,
+						delay	: 100,
+						randomize : function(activeElementIndex){
+							return data[0];
+						}
+					});
+					var machine2 = $("#machine2").slotMachine({
+						active : 0,
+						delay	: 100,
+						randomize : function(activeElementIndex){
+							return data[1];
+						}
+					});
+					var machine3 = $("#machine3").slotMachine({
+						active : 0,
+						delay	: 100,
+						randomize : function(activeElementIndex){
+							return data[2];
+						}
+					});
+					var machine4 = $("#machine4").slotMachine({
+						active : 0,
+						delay	: 100,
+						randomize : function(activeElementIndex){
+							return data[3];
+						}
+					});
+					var machine5 = $("#machine5").slotMachine({
+						active : 0,
+						delay	: 100,
+						randomize : function(activeElementIndex){
+							return data[4];
+						}
+					});
+					var machine6 = $("#machine6").slotMachine({
+						active : 0,
+						delay	: 100,
+						randomize : function(activeElementIndex){
+							return data[5];
+						}
+					});
+					var machine7 = $("#machine7").slotMachine({
+						active : 0,
+						delay	: 100,
+						randomize : function(activeElementIndex){
+							return data[6];
+						}
+					});
+					if(flag&&!isRun){
+						isRun = 1;
+						var timer = null;
+						console.log("go:"+isRun)
+						$(".go").attr("src","images/stop.png");
+						$(".go_down").attr("src","images/stop-down.png");
+						machine1.shuffle();
+						setTimeout(function(){
+							machine2.shuffle();
+						}, 100);
+						setTimeout(function(){
+							machine3.shuffle();
+						}, 200);
+						setTimeout(function(){
+							machine4.shuffle();
+						}, 300);
+						setTimeout(function(){
+							machine5.shuffle();
+						}, 400);
+						setTimeout(function(){
+							machine6.shuffle();
+						}, 500);
+						setTimeout(function(){
+							machine7.shuffle();
+						}, 600);
+						timer = setTimeout(function(){
+							flag = 0;
+							isRun = 0;
+						},600);
+					}
+					if(!isRun && !flag){
+						isRun = 1;
+						var timer1 = null;
+						console.log("stop:"+isRun)
+						$(".go").attr("src","images/GO.png");
+						$(".go_down").attr("src","images/GO-down.png");
+						machine1.stop();
+						setTimeout(function(){
+							machine2.stop();
+						}, 300);
+						setTimeout(function(){
+							machine3.stop();
+						}, 600);
+						setTimeout(function(){
+							machine4.stop();
+						}, 900);
+						setTimeout(function(){
+							machine5.stop();
+						}, 1200);
+						setTimeout(function(){
+							machine6.stop();
+						}, 1500);
+						setTimeout(function(){
+							machine7.stop();
+						}, 1800);
+						timer1 = setTimeout(function(){
+							flag = 1;
+//							isRun = 0;
+						},1801);
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

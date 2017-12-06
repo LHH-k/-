@@ -171,7 +171,7 @@
 
 
 		<!-- Watch example -->
-		<!--<div id="watch" style="padding-top:50px;">
+		<div id="watch" style="padding-top:50px;">
 			<div class="content">
 				<h1>Slide the items</h1>
 
@@ -251,14 +251,14 @@
 				});
 
 				$("#trikyShuffle").click(function(){
-					triky.shuffle(3);
+					triky.shuffle(4);
 				});
 			});
-		</script>-->
+		</script>
 
 
 		<!-- Slot machine example -->
-		<!--<div id="casino" style="padding-top:50px;">
+		<div id="casino" style="padding-top:50px;">
 			<div class="content">
 				<h1>Use the API</h1>
 
@@ -346,21 +346,45 @@
 		<footer>
 			<div class="content">
 				<div id="textMachine" style="text-align: center">
-					<div>FORK!</div>
-					<div>SHARE!</div>
-					<div>USE IT!</div>
+					
+				</div>
+				<div class="btn-group btn-group-justified btn-group-casino">
+					<div class="btn btn-primary btn-lg last-btn">滚动</div>
 				</div>
 				<script>
 					$(document).ready(function(){
-						$("#textMachine").slotMachine({
-							active	: 1,
-							delay	: 450,
-							auto	: 1500
+						var sData = '040056';
+						data = sData.split("");
+						$("#textMachine").append("<div class='first-list' style='font-size:24px'>点击开始抽奖</div>");
+						data.forEach(function(e,i){
+							$("#textMachine").append("<div>"+e+"</div>");
+						})
+						var flag = 1;
+						var hasTime = 2;
+						var slot1 = $("#textMachine").slotMachine({
+							active	: 0,
+							delay	: 500,						//运动一圈时间
+							randomize: function(){
+								return 5;						//返回中奖结果
+							}
 						});
+						$(".last-btn").click(function(){
+							$("#textMachine div.first-list").remove();
+							if(hasTime){	
+								if(flag){				
+									hasTime--;
+									flag = 0;
+									slot1.shuffle(10,runAfter);				//滚动次数，也可跟function回调函数
+								}
+							}
+						})
+						function runAfter(){
+							flag = 1;
+						}
 					});
 				</script>
 			</div>
-		</footer>-->
+		</footer>
 
 	</body>
 </html>
