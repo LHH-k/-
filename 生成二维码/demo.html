@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>生成二维码</title>
+		<style>
+			ul li{list-style: none;float: left;margin:10px 20px;width: 200px;}
+			ul li textarea{width: 100%;display: block;height: 100px;}
+		</style>
+	</head>
+	<body>
+		<div>
+			请输入转换链接：<input type="text" id="myUrl" style="width: 260px;"/><br />
+			选择中心小图标(png)：<input type="file" onchange="img(this)"/>
+			<img style="width: 50px; height: 50px;border: 1px solid #ddd;display: inline-block;" src="" alt="" />
+			<button onclick="getImg()">提 交</button>
+		</div>
+		<div>
+			<div id="output" style="display: none;"></div>
+			<ul>
+				
+			</ul>
+		</div>
+		<script src="./src/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="./src/jquery.qrcode.min.js"></script>
+		<script>
+			var OldUrl = $("#myUrl").val();
+			var OldSrc = $("img").attr("src");
+			function img(node){
+				var imgURL = "";      
+			    try{     
+			        var file = null;  
+			        if(node.files && node.files[0] ){  
+			            file = node.files[0];   
+			        }else if(node.files && node.files.item(0)) {                                  
+			            file = node.files.item(0);     
+			        }     
+			        if(file){			        	
+			        	//Firefox 因安全性问题已无法直接通过input[file].value 获取完整的文件路径  
+			        	try{  
+			        	    //Firefox7.0   
+			        	    imgURL =  file.getAsDataURL();    
+			        	}catch(e){  
+			        	    //Firefox8.0以上                                
+			        	    imgRUL = window.URL.createObjectURL(file);  
+			        	}  
+			        }else{
+			        	imgRUL = "";
+			        }
+			     }catch(e){      //这里不知道怎么处理了，如果是遨游的话会报这个异常
+			        //支持html5的浏览器,比如高版本的firefox、chrome、ie10  
+			        if (node.files && node.files[0]) {                            
+			            var reader = new FileReader();   
+			            reader.onload = function (e) {                                        
+			                imgURL = e.target.result;    
+			            };  
+			            reader.readAsDataURL(node.files[0]);   
+			        }    
+			    }   
+	            creatImg(imgRUL);  
+			}
+			function creatImg(imgRUL){   //根据指定URL创建一个Img对象  
+			    $("img").attr('src',imgRUL);  
+			}  
+			var num = 0;
+			function getImg(){
+				var box = 'imgCanvas';
+				var myUrl = $("#myUrl").val();
+				var mySrc = $("img").attr("src");
+				if(!myUrl){
+					alert("请输入内容");
+					return false
+				}
+				if(myUrl != OldUrl || mySrc != OldSrc){
+					OldUrl = myUrl;
+					OldSrc = mySrc;
+					num ++;
+					box += num;
+					$("ul").append('<li><canvas class='+ box +' width="200" height="200"></canvas><textarea readonly>'+myUrl+'</textarea></li>')
+					$("#output").html('');
+					var qrcode = $('#output').qrcode({
+						text: myUrl,
+						width: 200,
+						height: 200
+					});
+					getIcon(qrcode,box);
+				}
+			}
+			function getIcon(qrcode,box){
+				var canvas = qrcode.find('canvas').get(0);
+				var oldCtx = canvas.getContext("2d");
+				var imgCanvas = document.querySelector('.'+box);
+				var ctx = imgCanvas.getContext('2d');
+				ctx.fillStyle = 'black';
+				ctx.fillRect(0, 0, imgCanvas.width, imgCanvas.height);
+				var img1 = oldCtx.getImageData(0, 0, canvas.width, canvas.height);
+				ctx.putImageData(img1, 0, 0, 0, 0, imgCanvas.width, imgCanvas.height);
+				if($("img").attr('src')){					
+					ctx.fillStyle = 'white';
+					ctx.strokeStyle = 'white';
+					ctx.lineJoin = "round";
+					ctx.lineWidth = 20;
+					ctx.strokeRect(imgCanvas.width / 2 - 20, imgCanvas.height / 2 - 20, 40, 40);
+					ctx.fillRect(imgCanvas.width / 2 - 20, imgCanvas.height / 2 - 20, 40, 40);
+					var img = $("img")[0];
+					ctx.drawImage(img, imgCanvas.width / 2 - 25, imgCanvas.height / 2 - 25, 50, 50);	
+				}
+			}
+		</script>
+
+	</body>
+
+</html>
