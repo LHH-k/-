@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>css揭秘-1</title>
+        <link rel="stylesheet" href="1.css">
+        <style>
+            /* 连体字 无用=-=*/
+            body{font-variant-ligatures: common-ligatures discretionary-ligatures historical-ligatures;} 
+            /* 缩进字数  无用=-=*/
+            pre {tab-size: 2;}
+            /* 继承 */
+                /* currentColor 根据字体的颜色来定，类似em的机制 */
+            .hr{line-height: 2;background: currentColor;color: #ddd;}
+            .hr span{color:cyan;}
+            .callout{position: relative;font-size: 125%;width: 12em;height: 4em; background:cyan;border: 1px solid #ddd;}
+            .callout::after{content:'';position: absolute;top:-.4em;left: 1em;padding:.35em;background: inherit;border:inherit;border-bottom: 0;border-right: 0;transform: rotate(45deg)}
+            /* 条纹背景 */
+            .twbj{ width: 200px;height: 100px;border: 1px dashed #000;display: inline-block;}  
+                /* 渐变实现 */
+                .twbj.s1{
+                    background: linear-gradient(90deg, #fb3 50%,#58a 0);background-size: 30px;
+                        /* “如果某个色标的位置值比整个列表中在它之前的色标的位置值都要
+                            小，则该色标的位置值会被设置为它前面所有色标位置值的最大值。” */
+                    /* background: linear-gradient(90deg, #fb3 50%,#58a 0) left top / 30px 100%; */
+                }
+                .twbj.s2{
+                    background: linear-gradient(45deg, #fb3 25%,#58a 0,#58a 50%,#fb3 0,#fb3 75%,#58a 0);
+                    /* background-size: 30px 30px; */
+                    /* 这意味着，如果想让条纹的宽度变化为我们原本想要的15px，就需要把background-size指定为2×15√2 ≈ 42.426 406 871像素： */
+                    background-size: 42.426406871px 42.426406871px;
+                }   
+                /* 重复渐变实现 */   /* ie浏览器不行 */
+                .twbj.s3{background: repeating-linear-gradient(45deg,#fb3 0, #fb3 15px, #58a 0, #58a 30px);}  
+                /* .twbj.s4{background: repeating-linear-gradient(45deg,rgba(255,255,255,0) 0,rgba(255,255,255,0) 15px,rgba(255,255,255,15%) 0,rgba(255,255,255,15%) 30px);background-color: #58a;}   */
+                .twbj.s4{background: repeating-linear-gradient(45deg,hsla(360,100%,100%,0) 0,hsla(360,100%,100%,0) 15px,hsla(360,100%,100%,15%) 0,hsla(360,100%,100%,15%) 30px);background-color: #58a;}  
+                
+
+            /* 蚂蚁行军的边框实现 */
+            @keyframes ants { to { background-position: 100% } }
+            .marching-ants {
+                padding: 1em;width: 200px;
+                border: 1px solid transparent;
+                background:linear-gradient(white, white) padding-box,repeating-linear-gradient(-45deg,black 0, black 25%, white 0, white 50%) 0 / .6em .6em;
+                animation: ants 12s linear infinite;
+            }
+
+            /* border-radius */
+            .b-radius{margin: 20px; }
+            .b-radius > span:nth-child(1){display: inline-block; width: 120px;height: 40px;background:olivedrab;border-radius: 35% 2% 36%/ 100% 10% 106%;}
+            .b-radius > span:nth-child(2){display: inline-block; width: 120px;height: 40px;background:orange;border-radius: 50%/300%;}
+
+            /* clip-path */ /* ie浏览器不行 */
+            .clip-path img{width: 200px;display: block;clip-path: polygon(50% 0, 100% 50%,50% 100%, 0 50%);transition: .5s clip-path;}
+            .clip-path img:hover {clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);}
+
+            /* 切角 */
+            .qj span{display: inline-block;width: 200px;height: 80px;background-color: #58a;}
+                /* linear-gradient实现 */
+                .qj span:nth-child(1){
+                    background:linear-gradient(135deg, transparent 15px, #58a 0) top left,
+                                linear-gradient(-135deg, transparent 15px, #58a 0) top right,
+                                linear-gradient(-45deg, transparent 15px, #58a 0) bottom right,
+                                linear-gradient(45deg, transparent 15px, #58a 0) bottom left;
+                    background-size: 50% 50%;background-repeat: no-repeat;
+                }
+                .qj span:nth-child(2){
+                    background:radial-gradient(circle at top left,transparent 15px, #58a 0) top left,
+                            radial-gradient(circle at top right,transparent 15px, #58a 0) top right,
+                            radial-gradient(circle at bottom right,transparent 15px, #58a 0) bottom right,
+                            radial-gradient(circle at bottom left,transparent 15px, #58a 0) bottom left;
+                    background-size: 50% 50%;background-repeat: no-repeat;
+                }
+                /* border-image实现 */ /* ie浏览器不行 */
+                .qj span:nth-child(3){
+                    border: 20px solid #58a;
+                    width: calc(200px - 20px * 2);
+                    height: calc(80px - 20px * 2);;
+                    border-image: 1 url('data:image/svg+xml,\
+                        <svg xmlns="http://www.w3.org/2000/svg" width="3" height="3" fill="%2358a">\
+                            <polygon points="0,1 1,0 2,0 3,1 3,2 2,3 1,3 0,2"/>\
+                        </svg>');
+                    background: #58a;
+                    background-clip: padding-box;
+                }
+                /* clip-path实现 */ /* ie浏览器不行 */
+                .qj span:nth-child(4){ 
+                    background: url(images/1.jpg) no-repeat center center / 100% 100%;
+                    clip-path: polygon( 20px 0,  calc(100% - 20px) 0,    100% 20px,  100% calc(100% - 20px), 
+                                        calc(100% - 20px) 100%,  20px 100%,     0 calc(100% - 20px),  0 20px
+                    );
+                }
+                
+            /* 梯形标签 */
+            .nav > span{
+                font-size: 14px; position: relative;display: inline-block;width: 70px;text-align: center;line-height: 26px;z-index: 0;padding-left: 16px;cursor: pointer;
+            }
+            .nav > span.active{
+                z-index: 2;
+            }
+            .nav > span::before{
+                content: '';position:absolute; top: -14px;left: 0;bottom: 0;right: -16px;z-index: -1;background:#58a;
+                background-image: linear-gradient(hsla(0,0%,100%,.6),hsla(0,0%,100%,0));
+                border: 1px solid rgba(0,0,0,.4);border-bottom: none;border-radius: .5em .5em 0 0;
+                box-shadow: 0 .15em white inset;
+                transform: perspective(.5em) rotateX(5deg);transform-origin: bottom;
+            }
+            .nav div{width: 500px;height: 80px;background: #58a;border: 1px solid rgba(0,0,0,.4);position:relative;z-index: 1;top: -1px;}
+            
+            /* 用css实现饼图 */
+            .pie {width: 100px; line-height: 100px;border-radius: 50%;background: yellowgreen;background-image: linear-gradient(90deg,transparent 50%, #655 0);display: inline-block;margin: 5px 20px;position: relative;text-align: center;color: transparent;}
+            @keyframes spin {
+                to { transform: rotate(.5turn); }
+            }
+            @keyframes bg {
+                50% { background: #655; }
+            }
+            .pie::before {content: '';position: absolute;top: 0; left: 50%;width: 50%; height: 100%;border-radius: 0 100% 100% 0 / 50%;background-color: inherit;
+                        transform-origin: left;animation: spin 50s linear infinite,bg 100s step-end infinite ;animation-play-state: paused;animation-delay: inherit;}
+
+            /* 折角效果 */
+            .note {
+                font-size: 20px;
+                position: relative;width: 500px;height: 200px;
+                background: #58a; /* 回退样式 */
+                background: linear-gradient(-150deg,transparent 1.5em, #58a 0);
+                border-radius: .5em;
+            }
+            .note::before {
+                content: '';
+                position: absolute;top: 0; right: 0;
+                background: linear-gradient(to left bottom,transparent 50%, rgba(0,0,0,.2) 0, rgba(0,0,0,.4)) 100% 0 no-repeat;
+                width: 1.73em;height: 3em;
+                transform: translateY(-1.3em) rotate(-30deg);transform-origin: bottom right;
+                border-bottom-left-radius: inherit;box-shadow: -.2em .2em .3em -.1em rgba(0,0,0,.15);
+            }
+            
+            /* 两端对其  无用=-=*/
+            .dq{width: 200px; text-align: justify;hyphens:auto;}
+
+            /* 插入换行 */
+            dt, dd { display: inline; }
+            dd {margin: 0;font-weight: bold;}
+            dd + dt::before {content: "\A";white-space:pre;}
+            dd + dd::before {content: ', ';font-weight: normal;}
+
+            /* 自定义下划线 */ /* ie浏览器不行 */
+            .xhx{background: linear-gradient(gray, gray) no-repeat;background-size: 100% 1px;background-position: 0 1.2em;text-shadow: .05em 0 white, -.05em 0 white;}
+            .xhx-xx{background: linear-gradient(90deg,gray 60%, transparent 0) repeat-x;background-size:.2em 1px;background-position: 0 1.2em;text-shadow: .05em 0 white, -.05em 0 white;}
+
+            /* 字体效果 */
+            .cssfg{background: #203;color: #ffc;text-shadow: 0 0 .1em, 0 0 .3em;font-size: 40px;display: inline;}
+            .css3d{background: #58a;color: white;font-size: 40px;display: inline-block;
+                    text-shadow:0 1px hsl(0,0%,85%),
+                                0 2px hsl(0,0%,80%),
+                                0 3px hsl(0,0%,75%),
+                                0 4px hsl(0,0%,70%),
+                                0 5px hsl(0,0%,65%),
+                                0 5px 10px black;}
+
+            /* 环形文字 */
+            .circular{width: 30em;height: 30em;font-size: 10px; margin: 3em auto 0;}
+            .circular path { fill: none; }
+            .circular svg {display: block;overflow: visible;}
+
+            /* 点赞动画 step() */
+            .dian-zan{width: 80px;height: 80px;background:url(images/dianzan.png) no-repeat 0 center / auto 100%;}
+            .dian-zan:hover{animation: dz .4s steps(20,end) 1; animation-fill-mode: forwards;}
+            @keyframes dz{
+                to {background-position:100%;}
+            }
+            /* 光标 */
+            .guangbiao span{
+                display: inline-block;width: 100px;height: 50px;text-align: center;line-height: 50px;
+            }
+            /* 滚动窗口阴影提示 */ /* ie浏览器不行 */
+            .scroll-box{
+                width:300px; height: 200px;overflow: auto;display: inline-block;
+                background: linear-gradient(180deg,white 30%, transparent),
+                            radial-gradient(at 50% 0, rgba(0,0,0,.2),transparent 70%),
+                            linear-gradient(0deg, white 30%, transparent),    
+                            radial-gradient(at 50% bottom, rgba(0,0,0,.2),transparent 70%);
+                            background-repeat: no-repeat;
+                            background-position: center top , center top, center bottom,center bottom;
+                            background-size: 100% 50px, 100% 15px, 100% 50px, 100% 15px;
+                            background-attachment: local, scroll, local, scroll;
+
+            }
+            scrollbar{
+                width: 30px;
+                height: 300px;
+                margin: 0 auto;
+            }
+            .scrollbar::-webkit-scrollbar {/*滚动条整体样式*/
+                    width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+                    height: 1px;
+                }
+            .scrollbar::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+                    border-radius: 10px;
+                    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+                    background: #535353;
+                }
+            .scrollbar::-webkit-scrollbar-track {/*滚动条里面轨道*/
+                    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+                    border-radius: 10px;
+                    background: #EDEDED;
+                }
+            .scrollbar.s1::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+                    border-radius: 10px;
+                    background-color: #F90;
+                    background-image: -webkit-linear-gradient(45deg, transparent 35%,rgba(255, 255, 255, .2) 0,rgba(255, 255, 255, .2) 75%, transparent 0);
+                    background-repeat: repeat-y;
+                    background-size: 100% 50px;
+                }
+            .scrollbar.s1::-webkit-scrollbar-track {/*滚动条里面轨道*/
+                    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+                    /*border-radius: 10px;*/
+                    background: #EDEDED;
+                }
+
+            /* 18.resize应用 */
+            .image-slider {position:relative;display: inline-block;}
+            .image-slider > div {position: absolute;top: 0; bottom: 0; left: 0;width: 50%; max-width: 100%;/* 初始宽度 */z-index: 1;
+                overflow: hidden; /* resize: horizontal; */ /* 可以改变宽度 */
+            }
+            .image-slider img{ display: block;user-select: none;}
+            .image-slider .range{width: 100%;position: absolute;left: 0;bottom: 20px;z-index: 2;margin: 0;}
+            /* 19.自适应内部元素 */
+            figure{border: 1px solid #ddd;padding: 20px;width: min-content; /* 以最小值为准 */ }
+        </style>
+    </head>
+    <body>
+        <h3>1.继承</h3>
+        <div>
+            <p class="hr">
+                <span>
+                    <a href="">css揭秘</a>
+                </span>
+            </p>
+        </div>
+        <div class="callout"></div>
+        <h3>2.条纹背景</h3>
+        <div class="twbj s1"></div>
+        <div class="twbj s2"></div>
+        <div class="twbj s3"></div>
+        <div class="twbj s4"></div>
+        <h3>3.蚂蚁行军</h3>
+        <div class="marching-ants"></div>
+        <h3>4.border-radius</h3>
+        <div class="b-radius">
+            <span></span>
+            <span></span>
+        </div>
+        <h3>5.clip-path</h3>
+        <div class="clip-path">
+            <img src="images/1.jpg" alt="">
+        </div>
+        <h3>6.切角效果</h3>
+        <div class="qj">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <h3>7.梯形标签</h3>
+        <div class="nav">
+            <span>标签1</span>
+            <span class="active">标签2</span>
+            <span>标签3</span>
+            <div>内容</div>
+        </div>
+        <h3>8.用css实现饼图</h3>
+        <div class="pie"style="animation-delay: -20s">20%</div>
+        <div class="pie"style="animation-delay: -60s">60%</div>
+        <h3>9.折角效果</h3>
+        <div class="note"></div>
+        <!-- <h3>10.文本对齐</h3>
+        <div class="dq">On Sunday morning Donny went into the yard and played with a dog. Sometimes a bird would come down to stay on the top's of the dog's house. Then Donny threw a stone at it. Suddenly the little boy began crying. Mother ran to Donny and asked him what was wrong. </div> -->
+        <h3>11.插入换行</h3>
+        <dl>
+            <dt>Name:</dt>
+            <dd>Lea Verou</dd>
+            <dt>Email:</dt>
+            <dd>lea@verou.me</dd>
+            <dd>leaverou@mit.edu</dd>
+            <dt>Location:</dt>
+            <dd>Earth</dd>
+        </dl>
+        <h3>12.自定义下划线</h3>
+        <div>On Sunday morning <span class="xhx">Donny went into the yard and played with a</span> dog.On Sunday morning <span class="xhx-xx">Donny went into the yard and played with a</span> dog.</div>
+        <h3>13.字体效果</h3>
+        <div class="css3d">css3d</div>
+        <div class="cssfg">cssfg</div>
+        <h3>14.环形文字</h3>
+        <div class="circular">
+            <svg viewBox="0 0 100 100">
+                <path d="M 0,50 a 50,50 0 1,1 0,1 z" id="circle" />
+                <text><textPath xlink:href="#circle">
+                    circular reasoning works because
+                </textPath></text>
+            </svg>
+        </div>
+        <!-- <div class="circular">
+            circular reasoning works because 
+        </div>
+        <script>
+            var el = document.querySelector('.circular');
+            var NS = "http://www.w3.org/2000/svg";
+            var xlinkNS = "http://www.w3.org/1999/xlink";
+            var svg = document.createElementNS(NS, "svg");
+            var circle = document.createElementNS(NS, "path");
+            var text = document.createElementNS(NS, "text");
+            var textPath = document.createElementNS(NS, "textPath");
+            svg.setAttribute("viewBox", "0 0 100 100");
+            circle.setAttribute("d", "M0,50 a50,50 0 1,1 0,1z");
+            circle.setAttribute("id", "circle");
+            textPath.textContent = el.textContent;
+            textPath.setAttributeNS(xlinkNS, "xlink:href", "#circle");
+            text.appendChild(textPath);
+            svg.appendChild(circle);
+            svg.appendChild(text);
+            el.textContent = '';
+            el.appendChild(svg);
+        </script> -->
+        <h3>15.点赞动画</h3>
+        <div class="dian-zan"></div>
+        <h3>16.光标</h3>
+        <div class="guangbiao">
+            <span style="cursor:not-allowed;">禁用光标</span>
+            <span style="cursor:copy;">copy光标</span>
+            <span style="cursor:zoom-in;">放大镜光标</span>
+            <span style="cursor:none;">隐藏光标</span>
+        </div>
+        <h3>17.scroll窗口提示</h3>
+        <div class="scroll-box scrollbar">
+            <ul>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+            </ul>
+        </div>
+        <div class="scroll-box scrollbar s1">
+            <ul>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+                <li>精神可嘉萨克</li>
+            </ul>
+        </div>
+        <h3>18.resize属性</h3>
+        <div class="image-slider">
+            <div>
+                <img src="images/IMG_3148.jpg" alt="Before" />
+            </div>
+            <img src="images/IMG_3148.jpg" alt="After" style="filter:brightness(50%);position: relative; z-index: 0;"/>
+            <input type="range" class="range">
+        </div>
+        <script>
+            var div = document.querySelector('.image-slider div');
+            var range = document.querySelector('.range');
+            range.oninput = function() {
+                div.style.width = this.value + '%';
+            };
+        </script>
+        <h3>19.自适应内部元素（width:min-content）</h3>
+        <figure>
+            <img src="images/1.jpg" style="width:300px;">
+            <figcaption>
+                The great Sir Adam Catlace was named after Countess Ada Lovelace, the first programmer.
+            </figcaption>
+        </figure>
+    </body>
+</html>

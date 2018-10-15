@@ -1,0 +1,10 @@
+body{background:#eee;margin:0;padding:0}
+.example{background:#FFF;width:1050px;border:1px #000 solid;margin:20px auto;padding:15px;-moz-border-radius: 3px;-webkit-border-radius: 3px}
+
+#water {
+    width:1000px;
+    height:500px;
+    display: block;
+    margin:0px auto;
+    cursor:pointer;
+}
